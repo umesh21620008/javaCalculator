@@ -28,10 +28,12 @@ pipeline {
                     sh 'javac AppTest.java'
                 }
             }
-            dependencies {
-                // Define the build stage as a dependency for the test stage
-                build 'build'
-            }
+        }
+    }
+    post {
+        always {
+            // Define the "test" stage to run regardless of the success or failure of previous stages
+            junit 'AppTest.xml' // Example of JUnit test result reporting
         }
     }
 }
