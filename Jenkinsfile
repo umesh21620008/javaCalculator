@@ -1,30 +1,37 @@
 pipeline {
-  agent any
+    agent any
     
-    
-  stages {
+    stages {
+        stage('build') {
+            steps {
+                script {
+                    // Update apt and install JDK
+                    sh 'apt-get update -qy'
+                    sh 'apt-get install -y default-jdk'
+                    
+                    // Build your Java application
+                    sh 'javac App.java'
+                }
+                post {
+                    success {
+                        // Archive artifacts
+                        archiveArtifacts artifacts: 'App.class', fingerprint: true
+                    }
+                }
+            }
+        }
         
-    stage('Git') {
-      steps {
-        git 'https://github.com/umesh21620008/javaCalculator.git'
-      }
+        stage('test') {
+            steps {
+                script {
+                    // Compile test files
+                    sh 'javac AppTest.java'
+                }
+            }
+            dependencies {
+                // Define the build stage as a dependency for the test stage
+                build 'build'
+            }
+        }
     }
-     
-    stage('Build') {
-      steps {
-        sh 'apt install default-jdk'
-      }
-    }  
-    stage('Run') {
-      steps {
-        sh 'javac App.java'
-      }
-    }
-            
-    stage('Test') {
-      steps {
-        sh 'javac AppTest.java'
-      }
-    }
-  }
 }
