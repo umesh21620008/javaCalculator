@@ -1,15 +1,9 @@
 pipeline {
     agent any
-    
     stages {
         stage('build') {
             steps {
                 script {
-                    // Update apt and install JDK
-                    sh 'sudo apt-get update -qy'
-                    sh 'sudo apt-get install -y default-jdk'
-                    
-                    // Build your Java application
                     sh 'javac App.java'
                 }
                 post {
